@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragon CRMP | Официальный сайт</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff3e3e;
+            --primary-hover: #ff5f5f;
+            --accent: #ffae00;
+            --bg: #0b0b0d;
+            --card-bg: #161618;
+            --text: #ffffff;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- КНОПКИ --- */
+        .btn {
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-glow {
+            background: linear-gradient(45deg, var(--primary), #b30000);
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 62, 62, 0.4);
+        }
+
+        .btn-glow:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(255, 62, 62, 0.6);
+        }
+
+        .btn-outline {
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: black;
+        }
+
+        .btn-download {
+            background: linear-gradient(45deg, #12c2e9, #c471ed, #f64f59);
+            padding: 20px 40px;
+            font-size: 1.1rem;
+            color: white;
+            margin: 10px;
+        }
+
+        /* --- НАВИГАЦИЯ --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo { 
+            font-size: 1.8rem; 
+            font-weight: 900; 
+            letter-spacing: -1px; 
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+        .logo span { color: var(--primary); }
+
+        .user-panel { display: flex; gap: 15px; align-items: center; }
+
+        /* --- ГЛАВНЫЙ БЛОК --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(255,62,62,0.15) 0%, transparent 70%), 
+                        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070') center/cover;
+            padding: 0 20px;
+        }
+
+        .hero h1 { font-size: clamp(2.5rem, 8vw, 5.5rem); font-weight: 900; margin-bottom: 20px; }
+        .hero h1 span { color: var(--primary); }
+        .hero p { font-size: 1.2rem; color: #ccc; margin-bottom: 40px; max-width: 650px; }
+
+        /* --- СЕКЦИИ --- */
+        .section { padding: 100px 10%; text-align: center; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+
+        .card:hover { border-color: var(--primary); transform: translateY(-10px); }
+        .card h3 { font-size: 1.5rem; margin-bottom: 15px; }
+        .card .price { font-size: 2.2rem; font-weight: 900; color: var(--primary); margin: 20px 0; }
+
+        /* --- МОДАЛЬНЫЕ ОКНА --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: #1c1c1e;
+            padding: 45px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            border: 2px solid var(--primary);
+        }
+
+        input {
+            width: 100%;
+            padding: 18px;
+            margin: 12px 0;
+            background: #2c2c2e;
+            border: 1px solid #3c3c3e;
+            border-radius: 12px;
+            color: white;
+            font-family: inherit;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--primary); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body id="top">
+
+    <nav>
+        <a href="#top" class="logo" onclick="closeModal()">DRAGON<span>CRMP</span></a>
+        <div class="user-panel" id="auth-panel">
+            <button class="btn btn-outline" style="padding: 10px 25px;" onclick="showModal('login')">Войти</button>
+            <button class="btn btn-glow" style="padding: 10px 25px;" onclick="showModal('reg')">Регистрация</button>
+        </div>
+        <div class="user-panel hidden" id="profile-panel">
+            <span id="welcome-msg" style="font-weight: 600;">Привет, Игрок!</span>
+            <button class="btn btn-outline" style="padding: 8px 18px; font-size: 0.8rem;" onclick="logout()">Выйти</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-inner">
+            <h1>DRAGON <span>CRMP</span></h1>
+            <p>Стань легендой в мире криминальной России. Власть, деньги и уважение ждут только тебя.</p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="#download-section" class="btn btn-glow" style="padding: 22px 45px; font-size: 1.1rem;">Начать игру</a>
+                <a href="#donate" class="btn btn-outline" style="padding: 22px 45px; font-size: 1.1rem;">Магазин Dragon</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="download-section" class="section" style="background: linear-gradient(to bottom, #0b0b0d, #1a1a1c);">
+        <h2 style="font-size: 2.5rem;">КАК ПРИСОЕДИНИТЬСЯ?</h2>
+        <p style="color: #888; margin-top: 10px;">Выбери удобный способ установки и начни играть прямо сейчас</p>
+        <div style="margin-top: 50px; display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">
+            <a href="#" class="btn btn-glow btn-download">СКАЧАТЬ ЛАУНЧЕР</a>
+            <a href="#" class="btn btn-outline btn-download" style="border: 2px solid var(--primary);">СКАЧАТЬ КОННЕКТ</a>
+        </div>
+    </section>
+
+    <section id="donate" class="section">
+        <h2 style="font-size: 2.5rem;">ДОНАТ УСЛУГИ</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>DRAGON VIP</h3>
+                <p>Уникальные возможности, префикс и х3 бонусы на сервере.</p>
+                <div class="price">499 ₽</div>
+                <button class="btn btn-glow" style="width: 100%; padding: 18px;">Приобрести</button>
+            </div>
+            <div class="card">
+                <h3>ИГРОВАЯ ВАЛЮТА</h3>
+                <p>Стартовый капитал в размере 1.000.000 рублей.</p>
+                <div class="price">250 ₽</div>
+                <button class="btn btn-glow" style="width: 100%; padding: 18px;">Приобрести</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <h2 id="modal-title" style="margin-bottom: 25px;">Вход</h2>
+            <form id="auth-form" onsubmit="handleAuth(event)">
+                <input type="text" id="username" placeholder="Ваш ник (например: Ivan_Ivanov)" required>
+                <input type="password" id="password" placeholder="Ваш пароль" required>
+                <button type="submit" class="btn btn-glow" style="width: 100%; padding: 18px; margin-top: 25px;">Подтвердить</button>
+            </form>
+            <button class="btn" style="background: none; color: #777; margin-top: 20px;" onclick="closeModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'login';
+
+        function showModal(mode) {
+            currentMode = mode;
+            document.getElementById('modal-title').innerText = mode === 'reg' ? 'РЕГИСТРАЦИЯ' : 'АВТОРИЗАЦИЯ';
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('auth-form').reset();
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value;
+
+            let users = JSON.parse(localStorage.getItem('dragon_db')) || {};
+
+            if (currentMode === 'reg') {
+                if (users[user]) {
+                    alert('Этот никнейм уже занят!');
+                } else {
+                    users[user] = pass;
+                    localStorage.setItem('dragon_db', JSON.stringify(users));
+                    localStorage.setItem('dragon_current_session', user);
+                    alert('Регистрация успешна!');
+                    updateUI();
+                    closeModal();
+                }
+            } else {
+                if (users[user] && users[user] === pass) {
+                    localStorage.setItem('dragon_current_session', user);
+                    updateUI();
+                    closeModal();
+                } else if (!users[user]) {
+                    alert('Аккаунт с таким никнеймом не найден. Сначала зарегистрируйтесь!');
+                } else {
+                    alert('Неверный пароль!');
+                }
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('dragon_current_session');
+            updateUI();
+        }
+
+        function updateUI() {
+            const savedUser = localStorage.getItem('dragon_current_session');
+            const authPanel = document.getElementById('auth-panel');
+            const profilePanel = document.getElementById('profile-panel');
+            const welcomeMsg = document.getElementById('welcome-msg');
+
+            if (savedUser) {
+                authPanel.classList.add('hidden');
+                profilePanel.classList.remove('hidden');
+                welcomeMsg.innerText = `Профиль: ${savedUser}`;
+            } else {
+                authPanel.classList.remove('hidden');
+                profilePanel.classList.add('hidden');
+            }
+        }
+
+        window.onload = updateUI;
+
+        document.getElementById('modal').onclick = function(e) {
+            if (e.target.id === 'modal') closeModal();
+        };
+    </script>
+</body>
+</html>
